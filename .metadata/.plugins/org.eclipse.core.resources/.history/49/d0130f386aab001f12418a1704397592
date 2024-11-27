@@ -1,0 +1,49 @@
+package com.example.demo.Service;
+
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    // Register a new user
+    public String registerUser(User user) {
+        // Check if the email already exists
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            return "User with this email already exists!";
+        }
+
+        // Save the user if the email doesn't exist
+        userRepository.saveUser(user);
+        return "User registered successfully!";
+    }
+
+    // Login a user (For simplicity, just check email and password)
+    public String loginUser(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        
+        if (user.getPassword().equals(password)) {
+            return "Login successful!";
+        }
+        return "Invalid email or password!";
+    }
+    
+    public Double getTotalStaff(){
+    	return userRepository.calculateTotalStaff("staff member");
+    }
+    
+    public List<User> getUsers() {
+        // Example logic that simulates checking each user's role or status
+        List<User> users = userRepository.getUsers();
+        return users;
+    }
+
+}
